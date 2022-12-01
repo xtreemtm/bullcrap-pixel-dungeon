@@ -124,7 +124,9 @@ public class TimekeepersHourglass extends Artifact {
 									activeBuff = new timeFreeze();
 									Talent.onArtifactUsed(Dungeon.hero);
 									activeBuff.attachTo(Dungeon.hero);
+
 									charge--;
+
 									((timeFreeze)activeBuff).processTime(0f);
 								}
 							}

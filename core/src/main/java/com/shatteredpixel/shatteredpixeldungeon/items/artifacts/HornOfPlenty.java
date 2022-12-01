@@ -115,6 +115,7 @@ public class HornOfPlenty extends Artifact {
 				Statistics.foodEaten++;
 
 				charge -= chargesToUse;
+
 				Talent.onArtifactUsed(hero);
 
 				hero.sprite.operate(hero.pos);

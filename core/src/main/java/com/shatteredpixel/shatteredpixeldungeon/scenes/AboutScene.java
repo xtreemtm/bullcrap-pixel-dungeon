@@ -71,6 +71,19 @@ public class AboutScene extends PixelScene {
 		shpxLink += "&utm_medium=about_page";
 		shpxLink += "&utm_campaign=ingame_link";
 
+		CreditsBlock xtm = new CreditsBlock(true, Window.SHPX_COLOR,
+				"Bullcrap Pixel Dungeon",
+				Icons.ALEKS.get(),
+				"Mod by: _xtreemtm_",
+				"xtreemtm.github.io",
+				"https://xtreemtm.github.io");
+		if (landscape()){
+			xtm.setRect((w - fullWidth)/2f - 6, 10, 120, 0);
+		} else {
+			xtm.setRect((w - fullWidth)/2f, 6, 120, 0);
+		}
+		content.add(xtm);
+
 		CreditsBlock shpx = new CreditsBlock(true, Window.SHPX_COLOR,
 				"Shattered Pixel Dungeon",
 				Icons.SHPX.get(),
@@ -78,11 +91,13 @@ public class AboutScene extends PixelScene {
 				"ShatteredPixel.com",
 				shpxLink);
 		if (landscape()){
-			shpx.setRect((w - fullWidth)/2f - 6, 10, 120, 0);
+			shpx.setRect(xtm.left(), xtm.bottom() + 12, colWidth, 0);
 		} else {
-			shpx.setRect((w - fullWidth)/2f, 6, 120, 0);
+			shpx.setRect(xtm.left(), xtm.bottom() + 12, colWidth, 0);
 		}
 		content.add(shpx);
+
+		addLine(shpx.top() - 8, content);
 
 		CreditsBlock alex = new CreditsBlock(false, Window.SHPX_COLOR,
 				"Hero Art & Design:",

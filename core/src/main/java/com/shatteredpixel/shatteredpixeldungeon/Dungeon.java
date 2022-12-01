@@ -81,6 +81,8 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.SparseArray;
 
+import com.zrp200.scrollofdebug.ScrollOfDebug;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -219,6 +221,7 @@ public class Dungeon {
 			seed = DungeonSeed.randomSeed();
 		}
 
+
 		Actor.clear();
 		Actor.resetNextID();
 
@@ -264,6 +267,11 @@ public class Dungeon {
 		hero = new Hero();
 		hero.live();
 		
+		if (customSeedText.contains("YAS")) {
+			ScrollOfDebug debug = new ScrollOfDebug();
+			if(!debug.collect()) {Dungeon.hero.belongings.backpack.items.add(debug);}
+		}
+
 		Badges.reset();
 		
 		GamesInProgress.selectedClass.initHero( hero );

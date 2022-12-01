@@ -406,6 +406,7 @@ public abstract class Wand extends Item {
 		
 		curCharges -= cursed ? 1 : chargesPerCast();
 
+
 		//remove magic charge at a higher priority, if we are benefiting from it are and not the
 		//wand that just applied it
 		WandOfMagicMissile.MagicCharge buff = curUser.buff(WandOfMagicMissile.MagicCharge.class);

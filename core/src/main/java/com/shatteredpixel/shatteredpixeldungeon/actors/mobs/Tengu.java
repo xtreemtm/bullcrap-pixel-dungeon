@@ -77,6 +77,8 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
+import com.zrp200.scrollofdebug.ScrollOfDebug;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -218,6 +220,7 @@ public class Tengu extends Mob {
 		
 		if (Dungeon.hero.subClass == HeroSubClass.NONE) {
 			Dungeon.level.drop( new TengusMask(), pos ).sprite.drop();
+			Dungeon.level.drop( new ScrollOfDebug(), pos ).sprite.drop();
 		}
 		
 		GameScene.bossSlain();

@@ -173,7 +173,9 @@ public class EtherealChains extends Artifact {
 			GLog.w( Messages.get(this, "no_charge") );
 			return;
 		} else {
+
 			charge -= chargeUse;
+
 			Talent.onArtifactUsed(hero);
 			updateQuickslot();
 		}
@@ -236,7 +238,10 @@ public class EtherealChains extends Artifact {
 			GLog.w( Messages.get(EtherealChains.class, "no_charge") );
 			return;
 		} else {
-			charge -= chargeUse;
+
+			//charge -= chargeUse;
+			// hacked code
+
 			Talent.onArtifactUsed(hero);
 			updateQuickslot();
 		}

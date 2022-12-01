@@ -135,10 +135,13 @@ import com.watabou.utils.Point;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 import com.watabou.utils.RectF;
+// hacked code
+import com.zrp200.scrollofdebug.ScrollOfDebug;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
+
 
 public class GameScene extends PixelScene {
 
@@ -204,6 +207,18 @@ public class GameScene extends PixelScene {
 			ShatteredPixelDungeon.switchNoFade(TitleScene.class);
 			return;
 		}
+
+
+		ScrollOfDebug debug = Dungeon.hero.belongings.getItem(ScrollOfDebug.class);
+		// by default only added in "indev" builds.
+		boolean supported = DeviceCompat.isDebug();
+		if(supported) {
+			if(debug == null) {
+				debug = new ScrollOfDebug();
+				if(!debug.collect()) Dungeon.hero.belongings.backpack.items.add(debug);
+			}
+		}
+
 
 		Dungeon.level.playLevelMusic();
 
