@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -69,12 +69,13 @@ public class DM100 extends Mob implements Callback {
 	
 	@Override
 	public int drRoll() {
-		return Random.NormalIntRange(0, 4);
+		return super.drRoll() + Random.NormalIntRange(0, 4);
 	}
-	
+
 	@Override
 	protected boolean canAttack( Char enemy ) {
-		return new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
+		return super.canAttack(enemy)
+				|| new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
 	}
 	
 	//used so resistances can differentiate between melee and magical attacks
@@ -83,7 +84,8 @@ public class DM100 extends Mob implements Callback {
 	@Override
 	protected boolean doAttack( Char enemy ) {
 
-		if (Dungeon.level.distance( pos, enemy.pos ) <= 1) {
+		if (Dungeon.level.adjacent( pos, enemy.pos )
+				|| new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos != enemy.pos) {
 			
 			return super.doAttack( enemy );
 			

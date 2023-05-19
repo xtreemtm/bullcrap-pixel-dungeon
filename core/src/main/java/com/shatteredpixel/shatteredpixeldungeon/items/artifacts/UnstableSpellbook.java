@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -282,7 +282,9 @@ public class UnstableSpellbook extends Artifact {
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle(bundle);
 		scrolls.clear();
-		Collections.addAll(scrolls, bundle.getClassArray(SCROLLS));
+		if (bundle.contains(SCROLLS)) {
+			Collections.addAll(scrolls, bundle.getClassArray(SCROLLS));
+		}
 	}
 
 	public class bookRecharge extends ArtifactBuff{

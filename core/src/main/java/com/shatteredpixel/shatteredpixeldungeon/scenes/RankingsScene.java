@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -336,11 +336,7 @@ public class RankingsScene extends PixelScene {
 		
 		@Override
 		protected void onClick() {
-			if (rec.gameData != null) {
-				parent.add( new WndRanking( rec ) );
-			} else {
-				parent.add( new WndError( Messages.get(RankingsScene.class, "no_info") ) );
-			}
+			parent.add( new WndRanking( rec ) );
 		}
 	}
 }

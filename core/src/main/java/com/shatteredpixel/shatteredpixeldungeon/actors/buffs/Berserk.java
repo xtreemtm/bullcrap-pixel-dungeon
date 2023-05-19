@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,16 +29,20 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal.WarriorShield;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIcon;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
+import com.shatteredpixel.shatteredpixeldungeon.ui.DangerIndicator;
+import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Image;
+import com.watabou.noosa.Visual;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.GameMath;
-
-import java.text.DecimalFormat;
 
 public class Berserk extends Buff implements ActionIndicator.Action {
 
@@ -137,6 +141,8 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 
 				if (power < 1f){
 					ActionIndicator.clearAction(this);
+				} else {
+					ActionIndicator.refresh();
 				}
 
 				if (power <= 0) {
@@ -242,9 +248,22 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public Image actionIcon() {
-		//TODO, should look into these in general honestly
-		return new BuffIcon(BuffIndicator.FURY, true);
+	public int actionIcon() {
+		return HeroIcon.BERSERK;
+	}
+
+	@Override
+	public Visual secondaryVisual() {
+		BitmapText txt = new BitmapText(PixelScene.pixelFont);
+		txt.text((int) (power * 100) + "%");
+		txt.hardlight(CharSprite.POSITIVE);
+		txt.measure();
+		return txt;
+	}
+
+	@Override
+	public int indicatorColor() {
+		return 0x660000;
 	}
 
 	@Override
@@ -302,7 +321,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 				return (int)(power*100) + "%";
 			case RECOVERING:
 				if (levelRecovery > 0) {
-					return new DecimalFormat("#.#").format(levelRecovery);
+					return Messages.decimalFormat("#.##", levelRecovery);
 				} else {
 					return Integer.toString(turnRecovery);
 				}

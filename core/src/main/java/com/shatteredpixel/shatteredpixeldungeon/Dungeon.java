@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -190,7 +190,6 @@ public class Dungeon {
 	public static HashSet<Integer> chapters;
 
 	public static SparseArray<ArrayList<Item>> droppedItems;
-	public static SparseArray<ArrayList<Item>> portedItems;
 
 	//first variable is only assigned when game is started, second is updated every time game is saved
 	public static int initialVersion;
@@ -253,7 +252,6 @@ public class Dungeon {
 		energy = 0;
 
 		droppedItems = new SparseArray<>();
-		portedItems = new SparseArray<>();
 
 		LimitedDrops.reset();
 		
@@ -566,10 +564,6 @@ public class Dungeon {
 			for (int d : droppedItems.keyArray()) {
 				bundle.put(Messages.format(DROPPED, d), droppedItems.get(d));
 			}
-			
-			for (int p : portedItems.keyArray()){
-				bundle.put(Messages.format(PORTED, p), portedItems.get(p));
-			}
 
 			quickslot.storePlaceholders( bundle );
 
@@ -728,7 +722,6 @@ public class Dungeon {
 		Generator.restoreFromBundle( bundle );
 
 		droppedItems = new SparseArray<>();
-		portedItems = new SparseArray<>();
 		for (int i=1; i <= 26; i++) {
 			
 			//dropped items
@@ -740,16 +733,7 @@ public class Dungeon {
 			if (!items.isEmpty()) {
 				droppedItems.put( i, items );
 			}
-			
-			//ported items
-			items = new ArrayList<>();
-			if (bundle.contains(Messages.format( PORTED, i )))
-				for (Bundlable b : bundle.getCollection( Messages.format( PORTED, i ) ) ) {
-					items.add( (Item)b );
-				}
-			if (!items.isEmpty()) {
-				portedItems.put( i, items );
-			}
+
 		}
 	}
 	

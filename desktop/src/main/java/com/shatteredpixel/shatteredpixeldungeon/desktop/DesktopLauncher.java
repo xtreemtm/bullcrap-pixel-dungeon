@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -93,7 +93,7 @@ public class DesktopLauncher {
 					exceptionMsg = exceptionMsg.substring(0, 1000) + "...";
 				}
 
-				if (exceptionMsg.contains("Could not create window")){
+				if (exceptionMsg.contains("Couldnt create window")){
 					TinyFileDialogs.tinyfd_messageBox(title + " Has Crashed!",
 							title + " was not able to initialize its graphics display, sorry about that!\n\n" +
 									"This usually happens when your graphics card does not support OpenGL 2.0+, or has misconfigured graphics drivers.\n\n" +
@@ -161,16 +161,6 @@ public class DesktopLauncher {
 			String titleLinux = title.toLowerCase(Locale.ROOT).replace(" ", "-");
 			basePath = XDGHome + "/." + vendor + "/" + titleLinux + "/";
 
-			//copy over files from old linux save DIR, pre-1.2.0
-			FileHandle oldBase = new Lwjgl3FileHandle("." + vendor + "/" + titleLinux + "/", Files.FileType.External);
-			FileHandle newBase = new Lwjgl3FileHandle(basePath, Files.FileType.Absolute);
-			if (oldBase.exists()){
-				if (!newBase.exists()) {
-					oldBase.copyTo(newBase.parent());
-				}
-				oldBase.deleteDirectory();
-				oldBase.parent().delete(); //only regular delete, in case of saves from other PD versions
-			}
 			baseFileType = Files.FileType.Absolute;
 		}
 

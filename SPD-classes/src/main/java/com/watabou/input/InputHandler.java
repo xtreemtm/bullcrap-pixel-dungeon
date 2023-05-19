@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -79,18 +79,18 @@ public class InputHandler extends InputAdapter {
 		multiplexer.removeProcessor(processor);
 	}
 
-	public void emulateTouch(int button, boolean down){
+	public void emulateTouch(int id, int button, boolean down){
 		PointF hoverPos = PointerEvent.currentHoverPos();
 		if (down){
-			multiplexer.touchDown((int)hoverPos.x, (int)hoverPos.y, 10+button, button);
+			multiplexer.touchDown((int)hoverPos.x, (int)hoverPos.y, id, button);
 		} else {
-			multiplexer.touchUp((int)hoverPos.x, (int)hoverPos.y, 10+button, button);
+			multiplexer.touchUp((int)hoverPos.x, (int)hoverPos.y, id, button);
 		}
 	}
 
-	public void emulateDrag(int button){
+	public void emulateDrag(int id){
 		PointF hoverPos = PointerEvent.currentHoverPos();
-		multiplexer.touchDragged((int)hoverPos.x, (int)hoverPos.y, 10+button);
+		multiplexer.touchDragged((int)hoverPos.x, (int)hoverPos.y, id);
 	}
 	
 	public void processAllEvents(){
@@ -105,7 +105,7 @@ public class InputHandler extends InputAdapter {
 	
 	@Override
 	public synchronized boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if (pointer < 10) {
+		if (pointer != ControllerHandler.CONTROLLER_POINTER_ID) {
 			ControllerHandler.setControllerPointer(false);
 			ControllerHandler.controllerActive = false;
 		}

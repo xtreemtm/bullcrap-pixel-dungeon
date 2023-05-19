@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2023 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@ import java.util.Collections;
 
 public class WelcomeScene extends PixelScene {
 
-	private static final int LATEST_UPDATE = ShatteredPixelDungeon.v1_4_0;
+	private static final int LATEST_UPDATE = ShatteredPixelDungeon.v2_0_0;
 
 	//used so that the game does not keep showing the window forever if cleaning fails
 	private static boolean triedCleaningTemp = false;
@@ -205,6 +205,7 @@ public class WelcomeScene extends PixelScene {
 				message += "\n" + Messages.get(this, "patch_translations");
 
 			}
+
 		} else {
 			message = Messages.get(this, "what_msg");
 		}
@@ -239,21 +240,14 @@ public class WelcomeScene extends PixelScene {
 		//update rankings, to update any data which may be outdated
 		if (previousVersion < LATEST_UPDATE){
 			try {
-				Badges.loadGlobal(); //fixing a bug with v1.3.2 saves
 				Rankings.INSTANCE.load();
 				for (Rankings.Record rec : Rankings.INSTANCE.records.toArray(new Rankings.Record[0])){
 					try {
 						Rankings.INSTANCE.loadGameData(rec);
-						if (Statistics.gameWon) {
-							Badges.unlock(Badges.Badge.VICTORY);
-							if (Challenges.activeChallenges() >= 1) Badges.unlock(Badges.Badge.CHAMPION_1);
-							if (Challenges.activeChallenges() >= 3) Badges.unlock(Badges.Badge.CHAMPION_2);
-							if (Challenges.activeChallenges() >= 6) Badges.unlock(Badges.Badge.CHAMPION_3);
-						}
 						Rankings.INSTANCE.saveGameData(rec);
 					} catch (Exception e) {
-						//if we encounter a fatal per-record error, then clear that record
-						Rankings.INSTANCE.records.remove(rec);
+						//if we encounter a fatal per-record error, then clear that record's data
+						rec.gameData = null;
 						ShatteredPixelDungeon.reportException(e);
 					}
 				}
@@ -262,14 +256,13 @@ public class WelcomeScene extends PixelScene {
 						Rankings.INSTANCE.loadGameData(Rankings.INSTANCE.latestDaily);
 						Rankings.INSTANCE.saveGameData(Rankings.INSTANCE.latestDaily);
 					} catch (Exception e) {
-						//if we encounter a fatal per-record error, then clear that record
-						Rankings.INSTANCE.latestDaily = null;
+						//if we encounter a fatal per-record error, then clear that record's data
+						Rankings.INSTANCE.latestDaily.gameData = null;
 						ShatteredPixelDungeon.reportException(e);
 					}
 				}
 				Collections.sort(Rankings.INSTANCE.records, Rankings.scoreComparator);
 				Rankings.INSTANCE.save();
-				Badges.saveGlobal();
 			} catch (Exception e) {
 				//if we encounter a fatal error, then just clear the rankings
 				FileUtils.deleteFile( Rankings.RANKINGS_FILE );
@@ -277,6 +270,16 @@ public class WelcomeScene extends PixelScene {
 			}
 			Dungeon.daily = Dungeon.dailyReplay = false;
 
+		}
+
+		//pre-unlock Duelist for those who already have a win
+		if (previousVersion <= ShatteredPixelDungeon.v2_0_0){
+			Badges.loadGlobal();
+			if (Badges.isUnlocked(Badges.Badge.VICTORY) && !Badges.isUnlocked(Badges.Badge.UNLOCK_DUELIST)){
+				Dungeon.customSeedText = ""; //clear in case rankings updating left this set
+				Badges.unlock(Badges.Badge.UNLOCK_DUELIST);
+				Badges.saveGlobal();
+			}
 		}
 
 		SPDSettings.version(ShatteredPixelDungeon.versionCode);
