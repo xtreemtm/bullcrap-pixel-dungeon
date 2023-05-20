@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.food;
+package com.shatteredpixel.shatteredpixeldungeon.items.armyration;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
@@ -39,21 +39,23 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 
+import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
+
 import java.util.ArrayList;
 
 public class ArmyRation extends Item {
 
-	public static final float TIME_TO_EAT	= 3f;
+	public static final float TIME_TO_UNPACK	= 3f;
 	
-	public static final String AC_EAT	= "EAT";
+	public static final String AC_UNPACK	= "UNPACK";
 	
 	public float energy = Hunger.HUNGRY;
 	
 	{
-		stackable = true;
+		stackable = false;
 		image = ItemSpriteSheet.BACKPACK;
 
-		defaultAction = AC_EAT;
+		defaultAction = AC_UNPACK;
 
 		bones = true;
 	}
@@ -61,7 +63,7 @@ public class ArmyRation extends Item {
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		actions.add( AC_EAT );
+		actions.add( AC_UNPACK );
 		return actions;
 	}
 	
@@ -70,53 +72,33 @@ public class ArmyRation extends Item {
 
 		super.execute( hero, action );
 
-		if (action.equals( AC_EAT )) {
+		if (action.equals( AC_UNPACK )) {
 			
 			// detach( hero.belongings.backpack );
 			
-			satisfy(hero);
-			GLog.i( Messages.get(this, "eat_msg") );
+			// satisfy(hero);
+			GLog.i( Messages.get(this, "unpack_msg") );
 			
 			hero.sprite.operate( hero.pos );
 			hero.busy();
-			SpellSprite.show( hero, SpellSprite.FOOD );
-			Sample.INSTANCE.play( Assets.Sounds.EAT );
+			// SpellSprite.show( hero, SpellSprite.FOOD );
+			// Sample.INSTANCE.play( Assets.Sounds.EAT );
 			
-			hero.spend( eatingTime() );
+			hero.spend( usingTime() );
 
-			Talent.onFoodEaten(hero, energy, this);
+			Item food = new Food();
+			food.collect();
+
+			// Talent.onFoodEaten(hero, energy, this);
 			
-			Statistics.foodEaten++;
-			Badges.validateFoodEaten();
+			// Statistics.foodEaten++;
+			// Badges.validateFoodEaten();
 			
 		}
 	}
 
-	protected float eatingTime(){
-		if (Dungeon.hero.hasTalent(Talent.IRON_STOMACH)
-			|| Dungeon.hero.hasTalent(Talent.ENERGIZING_MEAL)
-			|| Dungeon.hero.hasTalent(Talent.MYSTICAL_MEAL)
-			|| Dungeon.hero.hasTalent(Talent.INVIGORATING_MEAL)
-			|| Dungeon.hero.hasTalent(Talent.FOCUSED_MEAL)){
-			return TIME_TO_EAT - 2;
-		} else {
-			return TIME_TO_EAT;
-		}
-	}
-	
-	protected void satisfy( Hero hero ){
-		float foodVal = energy;
-		if (Dungeon.isChallenged(Challenges.NO_FOOD)){
-			foodVal /= 3f;
-		}
-
-		Artifact.ArtifactBuff buff = hero.buff( HornOfPlenty.hornRecharge.class );
-		if (buff != null && buff.isCursed()){
-			foodVal *= 0.67f;
-			GLog.n( Messages.get(Hunger.class, "cursedhorn") );
-		}
-
-		Buff.affect(hero, Hunger.class).satisfy(foodVal);
+	protected float usingTime(){
+		return TIME_TO_UNPACK;
 	}
 	
 	@Override
